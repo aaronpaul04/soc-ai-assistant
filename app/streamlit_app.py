@@ -8,6 +8,15 @@ import json
 import time
 import streamlit as st
 
+# Load secrets from Streamlit Cloud into environment variables
+# so the imported modules (enrichment.py, analyzer.py) can read them via os.getenv
+try:
+    for key in ["GEMINI_API_KEY", "VIRUSTOTAL_API_KEY", "ABUSEIPDB_API_KEY"]:
+        if key in st.secrets:
+            os.environ[key] = st.secrets[key]
+except Exception:
+    pass  # st.secrets not available when running locally without secrets.toml
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, os.path.join(PROJECT_ROOT, "src"))
